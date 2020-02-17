@@ -37,7 +37,7 @@ spec:
       release: {{ .Release.Name }}
   minAvailable: {{ div .Values.global.journalnodeQuorumSize 2 | add1 }}
 ---
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ template "hdfs-k8s.journalnode.fullname" . }}
