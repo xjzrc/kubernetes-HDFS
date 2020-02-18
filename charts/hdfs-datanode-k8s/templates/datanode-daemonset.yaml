@@ -44,9 +44,9 @@ metadata:
     release: {{ .Release.Name }}
 spec:
   selector:
-    matchExpressions:
-      - key: {{ template "hdfs-k8s.datanode.fullname" . }}-exclude
-        operator: DoesNotExist
+    matchLabels:
+      app: {{ template "hdfs-k8s.datanode.name" . }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
