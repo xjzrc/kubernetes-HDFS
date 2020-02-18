@@ -28,6 +28,10 @@ spec:
   serviceName: {{ template "hdfs-k8s.namenode.fullname" . }}
   # Create a size-1 set.
   replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "hdfs-k8s.namenode.name" . }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:

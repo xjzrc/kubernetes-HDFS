@@ -121,6 +121,10 @@ metadata:
 spec:
   serviceName: {{ template "hdfs-k8s.namenode.fullname" . }}
   replicas: 2
+  selector:
+    matchLabels:
+      app: {{ template "hdfs-k8s.namenode.name" . }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
