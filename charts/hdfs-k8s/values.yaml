@@ -6,21 +6,23 @@ zookeeper:
     accessMode: ReadWriteOnce
     size: 5Gi    
     storageClass: "local-storage"
-    selector:
-       matchExpressions:
-         - {key: name, operator: In, values: [zk-pv]} 
 
   ## Configure Zookeeper resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   resources: ~
   image:
-    tag: 3.5.6
+    repository: zookeeper     # Container image repository for zookeeper container.
+    tag: 3.5.6                # Container image tag for zookeeper container.
   ## The JVM heap size to allocate to Zookeeper
   env:
     ZK_HEAP_SIZE: 1G
 
   ## The number of zookeeper server to have in the quorum.
   replicaCount: 3
+
+  ## Node labels and tolerations for pod assignment
+  nodeSelector:
+    hdfs-zookeeper-selector: hdfs-zookeeper
 
 ## ------------------------------------------------------------------------------
 ## hdfs-config-k8s:
@@ -57,12 +59,13 @@ hdfs-journalnode-k8s:
     storageClass: "local-storage"
     selector:
        matchExpressions:
-         - {key: name, operator: In, values: [jn-pv]}         
+         - { key: name, operator: In, values: [jn-pv] }
     accessMode: ReadWriteOnce
     size: 20Gi
 
   ## Node labels and tolerations for pod assignment
-  nodeSelector: {}
+  nodeSelector:
+    hdfs-journalnode-selector: hdfs-journalnode
   tolerations: []
   affinity: {}
 
@@ -112,7 +115,8 @@ hdfs-namenode-k8s:
   hostNetworkEnabled: true
 
   ## Node labels and tolerations for pod assignment
-  nodeSelector: {}
+  nodeSelector:
+    hdfs-namenode-selector: hdfs-namenode
   tolerations: []
   affinity: {}
 

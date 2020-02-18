@@ -43,6 +43,10 @@ metadata:
     chart: {{ template "hdfs-k8s.subchart" . }}
     release: {{ .Release.Name }}
 spec:
+  selector:
+    - matchExpressions:
+        - key: {{ template "hdfs-k8s.datanode.fullname" . }}-exclude
+          operator: DoesNotExist
   template:
     metadata:
       labels:
