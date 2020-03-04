@@ -28,7 +28,7 @@ metadata:
   name: {{ template "hbase-k8s.regionserver.fullname" . }}
   labels:
     app: {{ template "hbase-k8s.regionserver.name" . }}
-    chart: {{ template "hdfs-k8s.subchart" . }}
+    chart: {{ template "hbase-k8ssubchart" . }}
     release: {{ .Release.Name }}
 spec:
   selector:
@@ -43,7 +43,7 @@ metadata:
   name: {{ template "hbase-k8s.regionserver.fullname" . }}
   labels:
     app: {{ template "hbase-k8s.regionserver.name" . }}
-    chart: {{ template "hdfs-k8s.subchart" . }}
+    chart: {{ template "hbase-k8ssubchart" . }}
     release: {{ .Release.Name }}
 spec:
   serviceName: {{ template "hbase-k8s.regionserver.fullname" . }}
