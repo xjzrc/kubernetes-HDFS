@@ -92,3 +92,7 @@ since that is the only special index that helm template gives us.
 {{- define "hbase-rootdir" -}}
 {{- .Values.global.hbaseRootdir -}}
 {{- end -}}
+
+{{- define "hdfs-k8s.config.fullname" -}}
+{{- .Values.global.hdfsConfigMap -}}
+{{- end -}}

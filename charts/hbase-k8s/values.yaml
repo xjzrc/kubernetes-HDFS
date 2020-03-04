@@ -73,6 +73,8 @@ global:
 
   hbaseRootdir: hdfs://hdfs-k8s/hbase
 
+  hdfsConfigMap: hdfs-k8s-config
+
   ## Override zookeeper quorum address.
   zookeeperQuorumOverride: zk-0.zk-svc.default.svc.cluster.local:2181,zk-1.zk-svc.default.svc.cluster.local:2181,zk-2.zk-svc.default.svc.cluster.local:2181
 
