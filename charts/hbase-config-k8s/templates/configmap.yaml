@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "hbase-k8s.config.name" . }}
+  labels:
+    app: {{ template "hbase-k8s.master.name" . }}
+    chart: {{ template "hbase-k8s.subchart" . }}
+    release: {{ .Release.Name }}
+data:
+  hbase-site.xml: |
+    <configuration>
+    {{- range $key, $value := .Values.customHbaseConfig.hbaseSite }}
+      <property>
+        <name>{{ $key }}</name>
+        <value>{{ $value }}</value>
+      </property>
+    {{- end }}
+      <property>
+        <name>zookeeper.znode.parent</name>
+        <value>/hbase</value>
+      </property>
+      <property>
+        <name>hbase.rootdir</name>
+        <value>{{ template "hbase-rootdir" . }}</value>
+      </property>
+      <property>
+        <name>hbase.cluster.distributed</name>
+        <value>true</value>
+      </property>
+      <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>{{ template "zookeeper-quorum" . }}</value>
+      </property>
+    </configuration>
+
+  bootstrap.sh: |
+    #!/bin/bash
+
+    : ${HADOOP_PREFIX:=/usr/local/hadoop}
+
+    . $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
+
+    # Copy config files from volume mount
+
+    cp ${HADOOP_CUSTOM_CONF_DIR}/* /opt/hbase/conf
+
+    for f in hbase-site.xml; do
+      if [[ -e ${HBASE_CUSTOM_CONF_DIR}/$f ]]; then
+        cp ${HBASE_CUSTOM_CONF_DIR}/$f /opt/hbase/conf/$f
+      else
+        echo "ERROR: Could not find $f in $HBASE_CUSTOM_CONF_DIR"
+        exit 1
+      fi
+    done
+
+    # installing libraries if any - (resource urls added comma separated to the ACP system variable)
+    cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; curl -LO $cp ; done; cd -
+
+    if [[ "${$MY_POD}" =~ "master" ]]; then
+      /opt/hbase/bin/hbase-daemon.sh --config /opt/hbase/conf start master
+    fi
+
+    if [[ "${$MY_POD}" =~ "regionserver" ]]; then
+      /opt/hbase/bin/hbase-daemon.sh --config /opt/hbase/conf start regionserver
+    fi
+

@@ -1,0 +1,4 @@
+apiVersion: v1
+name: hbase-master-k8s
+version: 0.1.0
+description: master in HBASE on Kubernetes.

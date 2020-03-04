@@ -1,0 +1,20 @@
+dependencies:
+  - name: hbase-config-k8s
+    version: "0.1.0"
+    repository: "file://../hbase-config-k8s"
+    condition: condition.subchart.config
+    tags:
+      - hbase
+  - name: hbase-master-k8s
+    version: "0.1.0"
+    repository: "file://../hbase-master-k8s"
+    condition: condition.subchart.master
+    tags:
+      - hbase
+  - name: hbase-regionserver-k8s
+    version: "0.1.0"
+    repository: "file://../hbase-regionserver-k8s"
+    condition: condition.subchart.regionserver
+    tags:
+      - hbase
+
