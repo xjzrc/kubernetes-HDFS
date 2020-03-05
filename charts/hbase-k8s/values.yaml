@@ -70,7 +70,7 @@ global:
   hdfsConfigMap: hdfs-k8s-config
 
   ## Override zookeeper quorum address.
-  zookeeperQuorumOverride: zk-0.zk-svc.default.svc.cluster.local:2181,zk-1.zk-svc.default.svc.cluster.local:2181,zk-2.zk-svc.default.svc.cluster.local:2181
+  zookeeperQuorumOverride: hdfs-k8s-zookeeper-0.hdfs-k8s-zookeeper-headless.default.svc.cluster.local:2181,hdfs-k8s-zookeeper-1.hdfs-k8s-zookeeper-headless.default.svc.cluster.local:2181,hdfs-k8s-zookeeper-2.hdfs-k8s-zookeeper-headless.default.svc.cluster.local:2181
 
   ## How many regionServer nodes to launch as a quorum.
   regionserverQuorumSize: 3
