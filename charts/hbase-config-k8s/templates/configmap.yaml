@@ -42,7 +42,7 @@ data:
 
     # Copy config files from volume mount
 
-    HBASE_HOME = /opt/hbase
+    HBASE_HOME="/opt/hbase"
 
     for f in hbase-site.xml; do
       if [[ -e ${HBASE_CUSTOM_CONF_DIR}/$f ]]; then
