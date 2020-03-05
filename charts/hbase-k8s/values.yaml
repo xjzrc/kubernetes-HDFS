@@ -23,9 +23,9 @@ hbase-master-k8s:
     requests:
       memory: "1024Mi"
       cpu: "10m"
-      limits:
-        memory: "2048Mi"
-        cpu: "1000m"
+    limits:
+      memory: "2048Mi"
+      cpu: "1000m"
 
   ## Node labels and tolerations for pod assignment
   nodeSelector:
@@ -42,9 +42,9 @@ hbase-regionserver-k8s:
     requests:
       memory: "2Gi"
       cpu: "10m"
-      limits:
-        memory: "2Gi"
-        cpu: "1000m"
+    limits:
+      memory: "2Gi"
+      cpu: "1000m"
 
   ## Node labels and tolerations for pod assignment
   nodeSelector: []
