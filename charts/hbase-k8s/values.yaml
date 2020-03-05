@@ -22,7 +22,7 @@ hbase-master-k8s:
   resources:
     requests:
       memory: "1024Mi"
-      cpu: "10m"
+      cpu: "100m"
     limits:
       memory: "2048Mi"
       cpu: "1000m"
@@ -40,8 +40,8 @@ hbase-regionserver-k8s:
 
   resources:
     requests:
-      memory: "2Gi"
-      cpu: "10m"
+      memory: "1Gi"
+      cpu: "100m"
     limits:
       memory: "2Gi"
       cpu: "1000m"

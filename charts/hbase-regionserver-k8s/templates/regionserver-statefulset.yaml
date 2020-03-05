@@ -111,7 +111,7 @@ spec:
               name: rsinfo
           {{- if .Values.resources }}
           resources:
-{{ toYaml .Values.resources | indent 10 }}
+{{ toYaml .Values.resources | indent 12 }}
           {{- end }}
           readinessProbe:
             httpGet:
