@@ -59,12 +59,12 @@ spec:
         release: {{ .Release.Name }}
       {{- if .Values.podAnnotations }}
       annotations:
-    {{ toYaml .Values.podAnnotations | indent 8 }}
+{{ toYaml .Values.podAnnotations | indent 8 }}
     {{- end }}
     spec:
       {{- if .Values.affinity }}
       affinity:
-      {{ toYaml .Values.affinity | indent 8 }}
+{{ toYaml .Values.affinity | indent 8 }}
       {{- else if .Values.global.defaultAffinityEnabled }}
       affinity:
         podAntiAffinity:
@@ -83,11 +83,11 @@ spec:
       {{- end }}
       {{- if .Values.nodeSelector }}
       nodeSelector:
-      {{ toYaml .Values.nodeSelector | indent 8 }}
+{{ toYaml .Values.nodeSelector | indent 8 }}
       {{- end }}
       {{- if .Values.tolerations }}
       tolerations:
-      {{ toYaml .Values.tolerations | indent 8 }}
+{{ toYaml .Values.tolerations | indent 8 }}
       {{- end }}
       containers:
         - name: hbase-regionserver
@@ -111,7 +111,7 @@ spec:
               name: rsinfo
           {{- if .Values.resources }}
           resources:
-          {{ toYaml .Values.resources | indent 10 }}
+{{ toYaml .Values.resources | indent 10 }}
           {{- end }}
           readinessProbe:
             httpGet:
