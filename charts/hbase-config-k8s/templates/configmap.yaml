@@ -65,11 +65,11 @@ data:
     # installing libraries if any - (resource urls added comma separated to the ACP system variable)
     cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; curl -LO $cp ; done; cd -
 
-    if [[ "${$MY_POD}" =~ "master" ]]; then
+    if [[ "${MY_POD}" =~ "master" ]]; then
       ${HBASE_HOME}/bin/hbase-daemon.sh --config ${HBASE_HOME}/conf start master
     fi
 
-    if [[ "${$MY_POD}" =~ "regionserver" ]]; then
+    if [[ "${MY_POD}" =~ "regionserver" ]]; then
       ${HBASE_HOME}/bin/hbase-daemon.sh --config ${HBASE_HOME}/conf start regionserver
     fi
 
