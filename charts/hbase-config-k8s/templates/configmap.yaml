@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "hbase-k8s.config.name" . }}
+  name: {{ template "hbase-k8s.config.fullname" . }}
   labels:
-    app: {{ template "hbase-k8s.master.name" . }}
+    app: {{ template "hbase-k8s.config.name" . }}
     chart: {{ template "hbase-k8s.subchart" . }}
     release: {{ .Release.Name }}
 data:
@@ -44,11 +44,20 @@ data:
 
     HBASE_HOME = /opt/hbase
 
-    for f in hbase-site.xml core-site.xml hdfs-site.xml; do
+    for f in hbase-site.xml; do
       if [[ -e ${HBASE_CUSTOM_CONF_DIR}/$f ]]; then
         cp ${HBASE_CUSTOM_CONF_DIR}/$f ${HBASE_HOME}/conf/$f
       else
         echo "ERROR: Could not find $f in $HBASE_CUSTOM_CONF_DIR"
+        exit 1
+      fi
+    done
+
+    for f in core-site.xml hdfs-site.xml; do
+      if [[ -e ${HADOOP_CUSTOM_CONF_DIR}/$f ]]; then
+        cp ${HADOOP_CUSTOM_CONF_DIR}/$f ${HBASE_HOME}/conf/$f
+      else
+        echo "ERROR: Could not find $f in HADOOP_CUSTOM_CONF_DIR"
         exit 1
       fi
     done
