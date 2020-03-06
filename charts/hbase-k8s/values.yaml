@@ -65,6 +65,14 @@ hbase-thriftserver-k8s:
 
   replicaCount: 2
 
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "10m"
+    limits:
+      memory: "1024Mi"
+      cpu: "500m"
+
 ## ------------------------------------------------------------------------------
 ## Global values affecting all sub-charts:
 ## ------------------------------------------------------------------------------
@@ -87,7 +95,7 @@ global:
   zookeeperQuorumOverride: hdfs-k8s-zookeeper-0.hdfs-k8s-zookeeper-headless.default.svc.cluster.local:2181,hdfs-k8s-zookeeper-1.hdfs-k8s-zookeeper-headless.default.svc.cluster.local:2181,hdfs-k8s-zookeeper-2.hdfs-k8s-zookeeper-headless.default.svc.cluster.local:2181
 
   ## How many master nodes to launch as a quorum.
-  masterQuorumSize: 1
+  masterQuorumSize: 2
 
   ## How many regionServer nodes to launch as a quorum.
   regionserverQuorumSize: 3
