@@ -27,7 +27,7 @@ metadata:
     chart: {{ template "hbase-k8s.subchart" . }}
     release: {{ .Release.Name }}
 spec:
-  replicas: {{ .Values.replicas }}
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: {{ template "hbase-k8s.thriftserver.name" . }}

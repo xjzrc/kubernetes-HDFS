@@ -63,7 +63,7 @@ hbase-restserver-k8s:
 ## ------------------------------------------------------------------------------
 hbase-thriftserver-k8s:
 
-  replicas: 2
+  replicaCount: 2
 
 ## ------------------------------------------------------------------------------
 ## Global values affecting all sub-charts:
