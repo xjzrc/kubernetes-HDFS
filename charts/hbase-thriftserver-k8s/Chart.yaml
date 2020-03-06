@@ -1,0 +1,4 @@
+apiVersion: v1
+name: hbase-thriftserver-k8s
+version: 0.1.0
+description: A thrift server for HBASE on Kubernetes.

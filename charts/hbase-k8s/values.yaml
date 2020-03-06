@@ -46,6 +46,26 @@ hbase-regionserver-k8s:
   affinity: {}
 
 ## ------------------------------------------------------------------------------
+## hbase-restserver-k8s:
+## ------------------------------------------------------------------------------
+hbase-restserver-k8s:
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "10m"
+    limits:
+      memory: "1024Mi"
+      cpu: "500m"
+
+## ------------------------------------------------------------------------------
+## hbase-thriftserver-k8s:
+## ------------------------------------------------------------------------------
+hbase-thriftserver-k8s:
+
+  replicas: 2
+
+## ------------------------------------------------------------------------------
 ## Global values affecting all sub-charts:
 ## ------------------------------------------------------------------------------
 global:
@@ -65,6 +85,9 @@ global:
 
   ## Override zookeeper quorum address.
   zookeeperQuorumOverride: hdfs-k8s-zookeeper-0.hdfs-k8s-zookeeper-headless.default.svc.cluster.local:2181,hdfs-k8s-zookeeper-1.hdfs-k8s-zookeeper-headless.default.svc.cluster.local:2181,hdfs-k8s-zookeeper-2.hdfs-k8s-zookeeper-headless.default.svc.cluster.local:2181
+
+  ## How many master nodes to launch as a quorum.
+  masterQuorumSize: 1
 
   ## How many regionServer nodes to launch as a quorum.
   regionserverQuorumSize: 3

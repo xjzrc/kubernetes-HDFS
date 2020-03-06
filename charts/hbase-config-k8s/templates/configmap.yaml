@@ -73,3 +73,11 @@ data:
       ${HBASE_HOME}/bin/hbase-daemon.sh --config ${HBASE_HOME}/conf start regionserver
     fi
 
+    if [[ "${MY_POD}" =~ "restserver" ]]; then
+      ${HBASE_HOME}/bin/hbase-daemon.sh --config ${HBASE_HOME}/conf start rest
+    fi
+
+    if [[ "${MY_POD}" =~ "thriftserver" ]]; then
+      ${HBASE_HOME}/bin/hbase-daemon.sh --config ${HBASE_HOME}/conf start thrift
+    fi
+

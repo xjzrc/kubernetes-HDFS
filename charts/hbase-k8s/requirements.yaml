@@ -17,4 +17,16 @@ dependencies:
     condition: condition.subchart.regionserver
     tags:
       - hbase
+  - name: hbase-restserver-k8s
+    version: "0.1.0"
+    repository: "file://../hbase-restserver-k8s"
+    condition: condition.subchart.restserver
+    tags:
+      - hbase
+  - name: hbase-thriftserver-k8s
+    version: "0.1.0"
+    repository: "file://../hbase-thriftserver-k8s"
+    condition: condition.subchart.thriftserver
+    tags:
+      - hbase
 

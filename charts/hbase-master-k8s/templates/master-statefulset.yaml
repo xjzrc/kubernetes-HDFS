@@ -13,10 +13,6 @@ metadata:
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
   ports:
-    - port: 8080
-      name: restapi
-    - port: 9090
-      name: thriftapi
     - port: 16000
       name: master
     - port: 16010
@@ -51,7 +47,7 @@ metadata:
     release: {{ .Release.Name }}
 spec:
   serviceName: {{ template "hbase-k8s.master.fullname" . }}
-  replicas: 2
+  replicas: {{ .Values.global.masterQuorumSize }}
   selector:
     matchLabels:
       app: {{ template "hbase-k8s.master.name" . }}
@@ -109,12 +105,8 @@ spec:
           command: ['/bin/sh', '-c']
           # The start script is provided by a config map.
           args:
-            - /etc/hbase-custom-conf/bootstrap.sh;while true;do echo hello;sleep 10000;done
+            - /etc/hbase-custom-conf/bootstrap.sh /usr/bin/tail -f /var/log/dmesg
           ports:
-            - containerPort: 8080
-              name: restapi
-            - containerPort: 9090
-              name: thriftapi
             - containerPort: 16000
               name: master
             - containerPort: 16010
@@ -127,14 +119,14 @@ spec:
             httpGet:
               path: /
               port: 16010
-            initialDelaySeconds: 5
-            timeoutSeconds: 2
+            initialDelaySeconds: 60
+            timeoutSeconds: 30
           livenessProbe:
             httpGet:
               path: /
               port: 16010
-            initialDelaySeconds: 10
-            timeoutSeconds: 2
+            initialDelaySeconds: 60
+            timeoutSeconds: 30
           volumeMounts:
             - name: hbase-config
               mountPath: /etc/hbase-custom-conf

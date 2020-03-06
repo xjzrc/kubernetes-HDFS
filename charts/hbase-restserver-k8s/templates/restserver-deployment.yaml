@@ -2,115 +2,64 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "hbase-k8s.regionserver.fullname" . }}
+  name: {{ template "hbase-k8s.restserver.fullname" . }}
   labels:
-    app: {{ template "hbase-k8s.regionserver.name" . }}
+    app: {{ template "hbase-k8s.restserver.name" . }}
     chart: {{ template "hbase-k8s.subchart" . }}
     release: {{ .Release.Name }}
   annotations:
-    # TODO: Deprecated. Replace tolerate-unready-endpoints with
-    # v1.Service.PublishNotReadyAddresses.
     service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
   ports:
-    - port: 16020
-      name: rs
-    - port: 16030
-      name: rsinfo
+    - port: 8080
+      name: restapi
   clusterIP: None
   selector:
-    app: {{ template "hbase-k8s.regionserver.name" . }}
+    app: {{ template "hbase-k8s.restserver.name" . }}
     release: {{ .Release.Name }}
----
-apiVersion: policy/v1beta1
-kind: PodDisruptionBudget
-metadata:
-  name: {{ template "hbase-k8s.regionserver.fullname" . }}
-  labels:
-    app: {{ template "hbase-k8s.regionserver.name" . }}
-    chart: {{ template "hbase-k8s.subchart" . }}
-    release: {{ .Release.Name }}
-spec:
-  selector:
-    matchLabels:
-      app: {{ template "hbase-k8s.regionserver.name" . }}
-      release: {{ .Release.Name }}
-  minAvailable: 1
 ---
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
-  name: {{ template "hbase-k8s.regionserver.fullname" . }}
+  name: {{ template "hbase-k8s.restserver.fullname" . }}
   labels:
-    app: {{ template "hbase-k8s.regionserver.name" . }}
+    app: {{ template "hbase-k8s.restserver.name" . }}
     chart: {{ template "hbase-k8s.subchart" . }}
     release: {{ .Release.Name }}
 spec:
-  serviceName: {{ template "hbase-k8s.regionserver.fullname" . }}
-  replicas: {{ .Values.global.regionserverQuorumSize }}
+  replicas: 1
   selector:
     matchLabels:
-      app: {{ template "hbase-k8s.regionserver.name" . }}
+      app: {{ template "hbase-k8s.restserver.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "hbase-k8s.regionserver.name" . }}
+        app: {{ template "hbase-k8s.restserver.name" . }}
         release: {{ .Release.Name }}
       {{- if .Values.podAnnotations }}
       annotations:
 {{ toYaml .Values.podAnnotations | indent 8 }}
-    {{- end }}
+      {{- end }}
     spec:
-      {{- if .Values.affinity }}
-      affinity:
-{{ toYaml .Values.affinity | indent 8 }}
-      {{- else if .Values.global.defaultAffinityEnabled }}
-      affinity:
-        podAntiAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            - labelSelector:
-                matchExpressions:
-                  - key: "app"
-                    operator: In
-                    values:
-                      - {{ template "hbase-k8s.regionserver.name" . }}
-                  - key: "release"
-                    operator: In
-                    values:
-                      - {{ .Release.Name }}
-              topologyKey: "kubernetes.io/hostname"
-      {{- end }}
-      {{- if .Values.nodeSelector }}
-      nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
-      {{- end }}
-      {{- if .Values.tolerations }}
-      tolerations:
-{{ toYaml .Values.tolerations | indent 8 }}
-      {{- end }}
       containers:
-        - name: hbase-regionserver
+        - name: hbase-restserver
           image: pierrezemb/hbase-docker:distributed-1.3.1-hadoop-2.7.3
           env:
             - name: HADOOP_CUSTOM_CONF_DIR
               value: /etc/hadoop-custom-conf
             - name: HBASE_CUSTOM_CONF_DIR
               value: /etc/hbase-custom-conf
-            # Used by the start script below.
             - name: MY_POD
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
           command: ['/bin/sh', '-c']
-          # The start script is provided by a config map.
           args:
             - /etc/hbase-custom-conf/bootstrap.sh /usr/bin/tail -f /var/log/dmesg
           ports:
-            - containerPort: 16020
-              name: rs
-            - containerPort: 16030
-              name: rsinfo
+            - containerPort: 8080
+              name: restapi
           {{- if .Values.resources }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
@@ -118,13 +67,13 @@ spec:
           readinessProbe:
             httpGet:
               path: /
-              port: 16030
+              port: 8080
             initialDelaySeconds: 60
             timeoutSeconds: 30
           livenessProbe:
             httpGet:
               path: /
-              port: 16030
+              port: 8080
             initialDelaySeconds: 60
             timeoutSeconds: 30
           volumeMounts:

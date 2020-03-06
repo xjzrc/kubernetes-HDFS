@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: hbase-k8s-ingress
+  labels:
+    app: hbase-k8s-ingress
+    chart: {{ template "hbase-k8s.subchart" . }}
+    release: {{ .Release.Name }}
+  annotations:
+    # use the shared ingress-nginx
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+    - host: hbase-k8s.fcbox.com
+      http:
+        paths:
+          - path: /restapi
+            backend:
+              serviceName: hbase-restserver-k8s
+              servicePort: 8080
+          - path: /thriftapi
+            backend:
+              serviceName: hbase-thriftserver-k8s
+              servicePort: 9090
+          - path: /masterinfo
+            backend:
+              serviceName: hbase-master-k8s
+              servicePort: 16010
+          - path: /rsinfo
+            backend:
+              serviceName: hbase-regionserver-k8s
+              servicePort: 16030
