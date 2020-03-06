@@ -47,17 +47,15 @@ data:
     # Turn on traces, useful while debugging.
     set -o xtrace
 
-    : ${HADOOP_PREFIX:=/usr/local/hadoop}
-
     . $HADOOP_PREFIX/etc/hadoop/hadoop-env.sh
 
     # Copy config files from volume mount
 
-    HBASE_HOME="/opt/hbase"
+    _HBASE_HOME=/opt/hbase
 
     for f in hbase-site.xml; do
       if [[ -e ${HBASE_CUSTOM_CONF_DIR}/$f ]]; then
-        cp ${HBASE_CUSTOM_CONF_DIR}/$f ${HBASE_HOME}/conf/$f
+        cp ${HBASE_CUSTOM_CONF_DIR}/$f ${_HBASE_HOME}/conf/$f
       else
         echo "ERROR: Could not find $f in $HBASE_CUSTOM_CONF_DIR"
         exit 1
@@ -66,7 +64,7 @@ data:
 
     for f in core-site.xml hdfs-site.xml; do
       if [[ -e ${HADOOP_CUSTOM_CONF_DIR}/$f ]]; then
-        cp ${HADOOP_CUSTOM_CONF_DIR}/$f ${HBASE_HOME}/conf/$f
+        cp ${HADOOP_CUSTOM_CONF_DIR}/$f ${_HBASE_HOME}/conf/$f
       else
         echo "ERROR: Could not find $f in HADOOP_CUSTOM_CONF_DIR"
         exit 1
@@ -77,19 +75,19 @@ data:
     cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; curl -LO $cp ; done; cd -
 
     if [[ "${MY_POD}" =~ "master" ]]; then
-      ${HBASE_HOME}/bin/hbase-daemon.sh --config ${HBASE_HOME}/conf start master
+      ${_HBASE_HOME}/bin/hbase-daemon.sh --config ${_HBASE_HOME}/conf start master
     fi
 
     if [[ "${MY_POD}" =~ "regionserver" ]]; then
-      ${HBASE_HOME}/bin/hbase-daemon.sh --config ${HBASE_HOME}/conf start regionserver
+      ${_HBASE_HOME}/bin/hbase-daemon.sh --config ${_HBASE_HOME}/conf start regionserver
     fi
 
     if [[ "${MY_POD}" =~ "restserver" ]]; then
-      ${HBASE_HOME}/bin/hbase-daemon.sh --config ${HBASE_HOME}/conf start rest
+      ${_HBASE_HOME}/bin/hbase-daemon.sh --config ${_HBASE_HOME}/conf start rest
     fi
 
     if [[ "${MY_POD}" =~ "thriftserver" ]]; then
-      ${HBASE_HOME}/bin/hbase-daemon.sh --config ${HBASE_HOME}/conf start thrift
+      ${_HBASE_HOME}/bin/hbase-daemon.sh --config ${_HBASE_HOME}/conf start thrift
     fi
 
     # A common approach is to keep the container alive
