@@ -1,9 +1,9 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: hbase-k8s-ingress
+  name: {{ template "hbase-k8s.fullname" . }}
   labels:
-    app: hbase-k8s-ingress
+    app: {{ template "hbase-k8s.name" . }}
     chart: {{ template "hbase-k8s.subchart" . }}
     release: {{ .Release.Name }}
   annotations:
@@ -16,17 +16,17 @@ spec:
         paths:
           - path: /restapi
             backend:
-              serviceName: hbase-restserver-k8s
+              serviceName: {{ template "hbase-k8s.restserver.fullname" . }}
               servicePort: 8080
           - path: /thriftapi
             backend:
-              serviceName: hbase-thriftserver-k8s
+              serviceName: {{ template "hbase-k8s.thriftserver.fullname" . }}
               servicePort: 9090
           - path: /masterinfo
             backend:
-              serviceName: hbase-master-k8s
+              serviceName: {{ template "hbase-k8s.master.fullname" . }}
               servicePort: 16010
           - path: /rsinfo
             backend:
-              serviceName: hbase-regionserver-k8s
+              serviceName: {{ template "hbase-k8s.regionserver.fullname" . }}
               servicePort: 16030

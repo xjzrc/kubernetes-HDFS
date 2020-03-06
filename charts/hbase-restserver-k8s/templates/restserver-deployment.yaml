@@ -56,7 +56,7 @@ spec:
                   fieldPath: metadata.name
           command: ['/bin/sh', '-c']
           args:
-            - /etc/hbase-custom-conf/bootstrap.sh /usr/bin/tail -f /var/log/dmesg
+            - /etc/hbase-custom-conf/bootstrap.sh /usr/bin/tail -f /dev/null
           ports:
             - containerPort: 8080
               name: restapi
