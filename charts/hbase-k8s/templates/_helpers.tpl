@@ -71,6 +71,32 @@ Create chart name and version as used by the subchart label.
 {{- end -}}
 {{- end -}}
 
+{{- define "hbase-k8s.restserver.name" -}}
+{{- template "hbase-k8s.name" . -}}-restserver
+{{- end -}}
+
+{{- define "hbase-k8s.restserver.fullname" -}}
+{{- $fullname := include "hbase-k8s.fullname" . -}}
+{{- if contains "restserver" $fullname -}}
+{{- printf "%s" $fullname -}}
+{{- else -}}
+{{- printf "%s-restserver" $fullname | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+
+{{- define "hbase-k8s.thriftserver.name" -}}
+{{- template "hbase-k8s.name" . -}}-thriftserver
+{{- end -}}
+
+{{- define "hbase-k8s.thriftserver.fullname" -}}
+{{- $fullname := include "hbase-k8s.fullname" . -}}
+{{- if contains "thriftserver" $fullname -}}
+{{- printf "%s" $fullname -}}
+{{- else -}}
+{{- printf "%s-thriftserver" $fullname | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+
 {{/*
 Create the domain name part of services.
 The HDFS config file should specify FQDN of services. Otherwise, Kerberos
