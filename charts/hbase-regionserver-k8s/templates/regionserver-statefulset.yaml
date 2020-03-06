@@ -105,7 +105,7 @@ spec:
           command: ['/bin/sh', '-c']
           # The start script is provided by a config map.
           args:
-            - /etc/hbase-custom-conf/bootstrap.sh /usr/bin/tail -f /dev/null
+            - /etc/hbase-custom-conf/bootstrap.sh
           ports:
             - containerPort: 16020
               name: rs

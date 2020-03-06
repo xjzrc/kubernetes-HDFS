@@ -34,7 +34,18 @@ data:
     </configuration>
 
   bootstrap.sh: |
-    #!/bin/bash
+    #!/usr/bin/env bash
+    # Exit on error. Append "|| true" if you expect an error.
+    set -o errexit
+    # Exit on error inside any functions or subshells.
+    set -o errtrace
+    # Do not allow use of undefined vars. Use ${VAR:-} to use an undefined VAR
+    # set -o nounset
+    # Catch an error in command pipes. e.g. mysqldump fails (but gzip succeeds)
+    # in `mysqldump |gzip`
+    set -o pipefail
+    # Turn on traces, useful while debugging.
+    set -o xtrace
 
     : ${HADOOP_PREFIX:=/usr/local/hadoop}
 
@@ -81,3 +92,5 @@ data:
       ${HBASE_HOME}/bin/hbase-daemon.sh --config ${HBASE_HOME}/conf start thrift
     fi
 
+    # A common approach is to keep the container alive
+    tail -f /dev/null
