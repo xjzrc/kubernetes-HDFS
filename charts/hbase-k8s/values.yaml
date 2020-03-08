@@ -43,6 +43,8 @@ nginx-ingress:
         effect: PreferNoSchedule
   rbac:
     create: true
+  tcp:
+    9090: "default/hbase-k8s-thriftserver:9090"
 ## ------------------------------------------------------------------------------
 ## hbase-config-k8s:
 ## ------------------------------------------------------------------------------
@@ -129,8 +131,8 @@ global:
     runAsUser: 0
     fsGroup: 1000
 
-  ## Whether or not to expect namenodes in the HA setup.
-  namenodeHAEnabled: true
+  ##
+  hostNetworkEnabled: true
 
   hbaseRootdir: hdfs://hdfs-k8s/hbase
 

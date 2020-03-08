@@ -15,19 +15,7 @@ spec:
     - host: hbase-k8s.fcbox.com
       http:
         paths:
-          - path: /restapi
+          - path: /
             backend:
               serviceName: {{ template "hbase-k8s.restserver.fullname" . }}
               servicePort: 8080
-          - path: /thriftapi
-            backend:
-              serviceName: {{ template "hbase-k8s.thriftserver.fullname" . }}
-              servicePort: 9090
-          - path: /masterinfo
-            backend:
-              serviceName: {{ template "hbase-k8s.master.fullname" . }}
-              servicePort: 16010
-          - path: /rsinfo
-            backend:
-              serviceName: {{ template "hbase-k8s.regionserver.fullname" . }}
-              servicePort: 16030
