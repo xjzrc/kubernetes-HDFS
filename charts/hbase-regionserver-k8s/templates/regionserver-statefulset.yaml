@@ -7,17 +7,12 @@ metadata:
     app: {{ template "hbase-k8s.regionserver.name" . }}
     chart: {{ template "hbase-k8s.subchart" . }}
     release: {{ .Release.Name }}
-  annotations:
-    # TODO: Deprecated. Replace tolerate-unready-endpoints with
-    # v1.Service.PublishNotReadyAddresses.
-    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
   ports:
     - port: 16020
       name: rs
     - port: 16030
       name: rsinfo
-  clusterIP: None
   selector:
     app: {{ template "hbase-k8s.regionserver.name" . }}
     release: {{ .Release.Name }}

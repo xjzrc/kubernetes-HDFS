@@ -7,17 +7,12 @@ metadata:
     app: {{ template "hbase-k8s.master.name" . }}
     chart: {{ template "hbase-k8s.subchart" . }}
     release: {{ .Release.Name }}
-  annotations:
-    # TODO: Deprecated. Replace tolerate-unready-endpoints with
-    # v1.Service.PublishNotReadyAddresses.
-    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
   ports:
     - port: 16000
       name: master
     - port: 16010
       name: masterinfo
-  clusterIP: None
   selector:
     app: {{ template "hbase-k8s.master.name" . }}
     release: {{ .Release.Name }}

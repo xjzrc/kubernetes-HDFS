@@ -1,4 +1,49 @@
 ## ------------------------------------------------------------------------------
+## nginx-ingress:
+## ------------------------------------------------------------------------------
+nginx-ingress:
+  controller:
+    replicaCount: 1
+    hostNetwork: true
+    nodeSelector:
+      node-role.kubernetes.io/edge: ''
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                    - nginx-ingress
+                - key: component
+                  operator: In
+                  values:
+                    - controller
+            topologyKey: kubernetes.io/hostname
+    tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: PreferNoSchedule
+  defaultBackend:
+    image:
+      repository: registry.cn-hangzhou.aliyuncs.com/lusifeng/defaultbackend-amd64
+      tag: "1.5"
+    nodeSelector:
+      node-role.kubernetes.io/edge: ''
+    tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: PreferNoSchedule
+  rbac:
+    create: true
+## ------------------------------------------------------------------------------
 ## hbase-config-k8s:
 ## ------------------------------------------------------------------------------
 hbase-config-k8s:

@@ -7,13 +7,10 @@ metadata:
     app: {{ template "hbase-k8s.thriftserver.name" . }}
     chart: {{ template "hbase-k8s.subchart" . }}
     release: {{ .Release.Name }}
-  annotations:
-    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
 spec:
   ports:
     - port: 9090
       name: thriftapi
-  clusterIP: None
   selector:
     app: {{ template "hbase-k8s.thriftserver.name" . }}
     release: {{ .Release.Name }}

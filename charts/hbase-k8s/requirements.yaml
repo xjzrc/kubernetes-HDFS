@@ -1,4 +1,10 @@
 dependencies:
+  - name: nginx-ingress
+    version: "0.30.0"
+    repository: https://kubernetes-charts.storage.googleapis.com/
+    condition: condition.subchart.ingress
+    tags:
+      - hbase
   - name: hbase-config-k8s
     version: "0.1.0"
     repository: "file://../hbase-config-k8s"
