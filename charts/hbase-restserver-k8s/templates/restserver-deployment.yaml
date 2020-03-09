@@ -39,14 +39,6 @@ spec:
 {{ toYaml .Values.podAnnotations | indent 8 }}
       {{- end }}
     spec:
-      {{- if .Values.global.hostNetworkEnabled }}
-      # Use hostNetwork so datanodes connect to namenode without going through an overlay network
-      # like weave. Otherwise, namenode fails to see physical IP address of datanodes.
-      # Disabling this will break data locality as namenode will see pod virtual IPs and fails to
-      # equate them with cluster node physical IPs associated with data nodes.
-      # We currently disable this only for CI on minikube.
-      dnsPolicy: ClusterFirstWithHostNet
-      {{- end }}
       containers:
         - name: hbase-restserver
           image: pierrezemb/hbase-docker:distributed-1.3.1-hadoop-2.7.3
