@@ -87,7 +87,7 @@ data:
     fi
 
     if [[ "${MY_POD}" =~ "thriftserver" ]]; then
-      ${_HBASE_HOME}/bin/hbase-daemon.sh --config ${_HBASE_HOME}/conf start thrift
+      ${_HBASE_HOME}/bin/hbase-daemon.sh --config ${_HBASE_HOME}/conf start thrift2
     fi
 
     # A common approach is to keep the container alive
