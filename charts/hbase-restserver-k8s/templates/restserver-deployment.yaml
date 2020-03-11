@@ -7,10 +7,26 @@ metadata:
     app: {{ template "hbase-k8s.restserver.name" . }}
     chart: {{ template "hbase-k8s.subchart" . }}
     release: {{ .Release.Name }}
+  {{- if .Values.service.labels }}
+{{ toYaml .Values.service.labels | indent 4 }}
+  {{- end }}
+  {{- if .Values.service.annotations }}
+  annotations:
+{{ toYaml .Values.service.annotations | indent 4 }}
+  {{- end }}
 spec:
+  type: {{ .Values.service.type }}
   ports:
-    - port: 8080
+    - port: {{ .Values.service.externalPort }}
       name: restapi
+      targetPort: 8080
+{{- if hasKey .Values.service "nodePort" }}
+      nodePort: {{ .Values.service.nodePort }}
+{{- end }}
+  {{- if .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+{{ toYaml .Values.service.loadBalancerSourceRanges | indent 4 }}
+  {{- end }}
   selector:
     app: {{ template "hbase-k8s.restserver.name" . }}
     release: {{ .Release.Name }}
@@ -94,3 +110,52 @@ spec:
         runAsUser: {{ .Values.global.podSecurityContext.runAsUser }}
         fsGroup: {{ .Values.global.podSecurityContext.fsGroup }}
   {{- end }}
+---
+{{- if .Values.ingress.enabled -}}
+{{- $serviceName := include "hbase-k8s.restserver.fullname" . -}}
+{{- $servicePort := .Values.service.externalPort -}}
+{{- $paths := .Values.ingress.paths -}}
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: {{ template "hbase-k8s.restserver.fullname" . }}
+  labels:
+    app: {{ template "hbase-k8s.restserver.name" . }}
+    chart: {{ template "hbase-k8s.subchart" . }}
+    release: {{ .Release.Name }}
+    {{- range $key, $value := .Values.ingress.labels }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- if .Values.ingress.annotations }}
+  annotations:
+{{ toYaml .Values.ingress.annotations | indent 4 }}
+  {{- end }}
+spec:
+  rules:
+    {{- if .Values.ingress.hosts }}
+    {{- range $host := .Values.ingress.hosts }}
+    - host: {{ $host }}
+      http:
+        paths:
+          {{- range $p := $paths }}
+          - path: {{ $p }}
+            backend:
+              serviceName: {{ $serviceName }}
+              servicePort: {{ $servicePort }}
+    {{- end -}}
+    {{- end -}}
+    {{- else }}
+    - http:
+        paths:
+          {{- range $p := $paths }}
+          - path: {{ $p }}
+            backend:
+              serviceName: {{ $serviceName }}
+              servicePort: {{ $servicePort }}
+  {{- end -}}
+  {{- end -}}
+  {{- if .Values.ingress.tls }}
+  tls:
+{{ toYaml .Values.ingress.tls | indent 4 }}
+  {{- end -}}
+{{- end -}}
